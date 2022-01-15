@@ -12,6 +12,11 @@ public class GamePanel extends JPanel {
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g); //清屏作用
-            this.setBackground(Color.BLACK);    //设置背景的颜色
+            this.setBackground(Color.WHITE);    //设置背景
+
+            //绘制头部广告栏
+            Data.IC_HEAD.paintIcon(this,g,25,11);
+            //绘制游戏区域
+            g.fillRect(25,75,850,600);
     }
 }
