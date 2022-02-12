@@ -13,7 +13,6 @@ public class StartGame {
 
         //2.面板对象
         frame.add(new GamePanel());
-
         frame.setVisible(true); //窗口可见
     }
 }

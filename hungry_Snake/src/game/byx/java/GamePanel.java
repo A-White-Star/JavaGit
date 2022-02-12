@@ -14,10 +14,10 @@ import java.awt.event.KeyListener;
 //容器类，面板
 public class GamePanel extends JPanel implements KeyListener, ActionListener {
     int length;//蛇的长度
-    String fx ;
+    String fx = null ;
     int[] snakeX = new int[600];//蛇的坐标x
     int[] snakeY = new int[500];//蛇的坐标y
-    boolean isStart = false;//游戏是否开始
+    static boolean isStart = false;//游戏是否开始
 
     Timer timer = new Timer(100,this); //每隔一百毫秒动一下
     //构造
@@ -35,6 +35,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
         snakeX[0]=100;snakeY[0]=100;//头部坐标
         snakeX[1]=75;snakeY[1]=100;//第一节身体坐标
         snakeX[2]=50;snakeY[2]=100;//第二节身体坐标
+
     }
 
     //画板：画蛇
@@ -66,8 +67,6 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
 
     }
 
-
-
     //键盘按下
     @Override
     public void keyPressed(KeyEvent e) {
@@ -79,13 +78,15 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
             System.out.println("开始游戏/暂停游戏");
             repaint();//刷新界面
         }
-
-        switch (keyCode){
-            case KeyEvent.VK_LEFT:fx="L";break;
-            case KeyEvent.VK_RIGHT:fx="R";break;
-            case KeyEvent.VK_UP:fx="U";break;
-            case KeyEvent.VK_DOWN:fx="D";break;
+        if(isStart){
+            switch (keyCode){
+                case KeyEvent.VK_LEFT:fx="L";break;
+                case KeyEvent.VK_RIGHT:fx="R";break;
+                case KeyEvent.VK_UP:fx="U";break;
+                case KeyEvent.VK_DOWN:fx="D";break;
+            }
         }
+
     }
 
     //键盘释放
@@ -97,7 +98,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
     //执行定时操作
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(!isStart){
+        if(isStart){
             for(int i = length-1;i>0;i--){
                 snakeX[i]=snakeX[i-1];
                 snakeY[i]=snakeY[i-1];
@@ -114,9 +115,8 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
                 if(snakeY[0]<25){ snakeY[0]=650; }//边界判断
             }else if(fx.equals("D")){
                 snakeY[0]=snakeY[0]+25;
-                if(snakeY[0]<650){ snakeY[0]=75; }//边界判断
+                if(snakeY[0]>650){ snakeY[0]=75; }//边界判断
             }
-
             repaint();
         }
         timer.start(); //让时间动起来
