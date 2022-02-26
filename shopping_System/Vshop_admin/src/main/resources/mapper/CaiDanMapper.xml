@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.vshopadmin.dao.CaiDanDao">
+    <resultMap id="BaseResultMap" type="com.example.vshopadmin.model.CaiDan">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="mingCheng" column="mingcheng" jdbcType="VARCHAR"/>
+        <result property="url" column="url" jdbcType="VARCHAR"/>
+        <result property="path" column="path" jdbcType="VARCHAR"/>
+        <result property="paiXu" column="paixu" jdbcType="INTEGER"/>
+        <result property="isDelete" column="isDelete" jdbcType="BIT"/>
+        <result property="icon" column="icon" jdbcType="VARCHAR"/>
+        <result property="fuCaiDanId" column="fucaidanid" jdbcType="INTEGER"/>
+    </resultMap>
+
+
+    <resultMap id="MapWithJueSe" type="com.example.vshopadmin.model.CaiDan" extends="BaseResultMap">
+        <collection property="jueSeList" ofType="com.example.vshopadmin.model.JueSe">
+            <id property="id" column="jsid" jdbcType="INTEGER"/>
+            <result property="jueSeMingCheng" column="juesemingcheng " jdbcType="VARCHAR"/>
+            <result property="xianShiMingCheng" column="xianshimingcheng" jdbcType="VARCHAR"/>
+            <result property="isDelete" column="isDelete" jdbcType="BIT"/>
+        </collection>
+    </resultMap>
+
+    <resultMap id="CaiDanAndZiCaiDan" type="com.example.vshopadmin.model.CaiDan" extends="BaseResultMap">
+        <collection property="ziCaiDan" ofType="com.example.vshopadmin.model.CaiDan">
+            <id property="id" column="sid" jdbcType="INTEGER"/>
+            <result property="mingCheng" column="smc" jdbcType="VARCHAR"/>
+            <result property="url" column="surl" jdbcType="VARCHAR"/>
+            <result property="path" column="spath" jdbcType="VARCHAR"/>
+            <result property="paiXu" column="spx" jdbcType="INTEGER"/>
+            <result property="isDelete" column="sIsDelete" jdbcType="BIT"/>
+            <result property="fuCaiDanId" column="sfcdId" jdbcType="INTEGER"/>
+            <result property="icon" column="sicon" jdbcType="VARCHAR"/>
+        </collection>
+    </resultMap>
+    <insert id="addCaiDan">
+        insert into caidan(mingcheng,url,path,fucaidanId,icon,paixu,isDelete)
+        values(#{mingCheng},#{url},#{path},#{fuCaiDanId},#{icon},#{paiXu},0)
+    </insert>
+
+    <update id="updateCaiDan">
+        update caidan set
+        mingcheng=#{mingCheng},
+        url=#{url},
+        path=#{path},
+        fucaidanId=#{fuCaiDanId},
+        icon=#{icon},
+        paixu=#{paiXu}
+     where isDelete =0 and id =#{id}
+    </update>
+
+    <update id="deleteCaiDanById">
+        update caidan
+        set isDelete = 1
+        where id=#{id} and isDelete=0
+    </update>
+
+    <update id="deleteCaiDanByIds">
+        update caidan set isDelete=1 where  isDelete=0 and id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+        #{id}
+        </foreach>
+    </update>
+
+
+    <select id="getCaiDanList" resultMap="MapWithJueSe">
+        SELECT cd.*,js.id as jsId, js.xianshimingcheng, js.juesemingcheng, js.isDelete as jsIsDelete
+               FROM caidan cd
+                         LEFT JOIN juesecaidan jscd on cd.id = jscd.caidanId
+                        LEFT JOIN juese js on js.id =jscd.jueseId
+                WHERE cd.isDelete = 0
+                and jscd.isDelete = 0
+                and js.isDelete = 0
+    </select>
+    <select id="getAll" resultType="com.example.vshopadmin.model.CaiDan">
+        select id,mingcheng,url,path,fucaidanId,icon,paixu,isDelete from caidan where isDelete=0
+    </select>
+    <select id="getCaiDanListByYuanGongId" resultMap="CaiDanAndZiCaiDan">
+        SELECT DISTINCT cd.* FROM
+            (SELECT t1.*, t2.id sid, t2.mingcheng smc,t2.url surl,t2.path spath, t2.fucaidanid sfcdId, t2.paixu spx, t2.isDelete sIsDelete, t2.icon sicon FROM(SELECT * FROM caidan WHERE isDelete=0 AND fucaidanId=1)t1
+             LEFT JOIN caidan t2 on t1.id=t2.fucaidanId
+             WHERE t2.isDelete =0 or t2.isDelete is NULL)cd,
+             (SELECT caidanId FROM juesecaidan WHERE isDelete=0 AND jueseId in(SELECT jueseId FROM yuangongjuese WHERE isDelete=0 AND yuangongid=#{yuangongid}))t3
+         WHERE cd.id = t3.caidanId
+         OR cd.sid = t3.caidanId
+        ORDER BY paixu,spx
+    </select>
+    <select id="getById" resultType="com.example.vshopadmin.model.CaiDan">
+        select id, mingcheng,url path,fucaidanId,icon,paixu,isDelete
+        from caidan where isDelete=0 and id=#{id}
+    </select>
+    <select id="getListByKey" resultType="com.example.vshopadmin.model.CaiDan">
+        select id,mingcheng, url,path,fucaidanId, icon,path,isDelete
+        from caidan where isDelete =0 and mingcheng like concat('%',#{key},'%')
+    </select>
+    <select id="existsMingCheng" resultType="java.lang.Integer">
+    select exists (
+               select id from caidan
+    where (fucaidanId =1 or fucaidanId =#{fuCaiDanId})
+    and mingcheng = #{mingCheng})
+    </select>
+    <select id="getYiJi" resultType="com.example.vshopadmin.model.CaiDan">
+        select id,mingcheng from  caidan
+        where  isDelete=0
+        and (fucaidanId is null or fucaidanId =1)
+    </select>
+    <select id="getAllCaiDanAndZiCaiDanList" resultMap="CaiDanAndZiCaiDan">
+        SELECT t1.*, t2.id sid, t2.mingcheng smc,t2.url surl,t2.path spath, t2.fucaidanid sfcdId, t2.paixu spx, t2.isDelete sIsDelete, t2.icon sicon
+        FROM(SELECT * FROM caidan WHERE isDelete=0 AND fucaidanId=1)t1
+        LEFT JOIN caidan t2 on t1.id=t2.fucaidanId
+        WHERE t2.isDelete =0 or t2.isDelete is NULL
+    </select>
+    <select id="getCaiDanListByJueSeId" resultType="com.example.vshopadmin.model.CaiDan">
+        SELECT * FROM caidan WHERE id NOT in (SELECT DISTINCT fucaidanId FROM caidan WHERE fucaidanId IS NOT NULL)
+        AND id in (SELECT caidanId FROM juesecaidan WHERE isDelete = 0 AND jueseId =#{jueSeId})
+        AND isDelete =0
+    </select>
+</mapper>

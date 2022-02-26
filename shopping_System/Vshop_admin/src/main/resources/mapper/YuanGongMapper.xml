@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.vshopadmin.dao.YuanGongDao">
+    <resultMap id="BaseResultMap" type="com.example.vshopadmin.model.YuanGong">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="yonghuming" property="yongHuMing" jdbcType="VARCHAR"/>
+        <result column="zhenshixingming" property="zhenShiXingMing" jdbcType="VARCHAR"/>
+        <result column="xingbie" property="xingBie" jdbcType="BIT"/>
+        <result column="shoujihao" property="shouJiHao" jdbcType="VARCHAR"/>
+        <result column="mima" property="miMa" jdbcType="VARCHAR"/>
+        <result column="isDelete" property="isDelete" jdbcType="BIT"/>
+    </resultMap>
+    <insert id="addYuanGong">
+        insert into yuangong(yonghuming,zhenshixingming,xingbie,shoujihao,mima,isDelete)
+        values(#{yongHuMing},#{zhenShiXingMing},#{xingBie},#{shouJiHao},'$2a$10$Rm9CElG149J.xXvTykoPMuOFN29VXp3IY/xKCVGgaJoGb92NPavo2',0)
+    </insert>
+    <insert id="addYuanGongJueSeByYuanGongId">
+        insert into yuangongjuese(yuangongid,jueseid,isDelete)
+        values
+        <foreach collection="jueSeIds" item="jueSeId" separator=",">
+         (#{yuanGongId},#{jueSeId},0)
+        </foreach>
+    </insert>
+    <update id="updateYuanGong">
+        update yuangong set
+                          yonghuming=#{yongHuMing},
+                          zhenshixingming=#{zhenShiXingMing},
+                          xingbie=#{xingBie},
+                          shoujihao=#{shouJiHao}
+        where isDelete =0 and id =#{id}
+    </update>
+    <update id="deleteYuanGongById">
+        update yuangong
+        set isDelete = 1
+        where id=#{id} and isDelete=0
+    </update>
+    <update id="deleteYuanGongByIds">
+        update yuangong set isDelete=1 where  isDelete=0 and id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </update>
+    <update id="initPassword">
+        update yuangong set mima='$2a$10$Rm9CElG149J.xXvTykoPMuOFN29VXp3IY/xKCVGgaJoGb92NPavo2'
+        where isDelete =0 and id=#{id}
+    </update>
+    <update id="deleteYuanGongJueSeByYuanGongId">
+        update yuangongjuese set isDelete =1 where isDelete = 0 and yuangongId =#{yuanGongId}
+    </update>
+    <select id="loadUserByUsername" resultMap="BaseResultMap">
+        SELECT * FROM yuangong WHERE yonghuming = #{username} AND isDelete = 0
+    </select>
+    <select id="getJueSeList" resultType="com.example.vshopadmin.model.JueSe">
+        SELECT js.* FROM yuangongjuese ygjs LEFT  JOIN  juese js ON ygjs.jueseId = js.id
+        WHERE js.isDelete = 0 AND ygjs.isDelete = 0 AND ygjs.yuangongId = #{ygId}
+    </select>
+    <select id="getAll" resultType="com.example.vshopadmin.model.YuanGong">
+        SELECT * FROM yuangong WHERE isDelete=0
+    </select>
+    <select id="getListByKey" resultType="com.example.vshopadmin.model.YuanGong">
+        SELECT * FROM yuangong WHERE isDelete=0 AND (yonghuming like concat('%',#{key},'%')
+            or zhenshixingming like concat('%',#{key},'%')
+            or shoujihao like concat('%',#{key},'%'))
+    </select>
+    <select id="getById" resultType="com.example.vshopadmin.model.YuanGong">
+        SELECT * FROM yuangong WHERE isDelete=0 AND id=#{id}
+    </select>
+    <select id="existsYongHuMing" resultType="java.lang.Integer">
+        select exists (
+                       select id from yuangong
+                       where zhenshixingming = #{yongHuMing})
+    </select>
+    <select id="existsZhenShiXingMing" resultType="java.lang.Integer">
+        select exists (
+                       select id from yuangong
+                       where zhenshixingming = #{zhenShiXingMing})
+    </select>
+    <select id="existsShouJiHao" resultType="java.lang.Integer">
+        select exists (
+                       select id from yuangong
+                       where shoujihao = #{shouJiHao})
+    </select>
+</mapper>

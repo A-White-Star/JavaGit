@@ -23,6 +23,6 @@ public class Data {
     public static URL BODY_URL =Data.class.getResource("/res/body.png");
     public static ImageIcon IC_BODY = new ImageIcon(BODY_URL);
     //食物
-    public static URL FOOD_URL =Data.class.getResource("/res/left.png");
+    public static URL FOOD_URL =Data.class.getResource("/res/food.png");
     public static ImageIcon IC_FOOD = new ImageIcon(FOOD_URL);
 }

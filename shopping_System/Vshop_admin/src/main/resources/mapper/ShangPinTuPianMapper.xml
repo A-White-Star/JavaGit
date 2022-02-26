@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.vshopadmin.dao.ShangPinTuPianDao">
+    <resultMap id="BaseResultMap" type="com.example.vshopadmin.model.ShangPinTuPian">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="shangPinId" column="shangpinid" jdbcType="BIGINT"/>
+        <result property="imgUrl" column="imgUrl" jdbcType="VARCHAR"/>
+        <result property="isDelete" column="isDelete" jdbcType="BIT"/>
+    </resultMap>
+
+    <insert id="add" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO shangpintupian (shangpinId, imgUrl)
+        VALUES
+            (#{shangPinId}, #{imgUrl})
+    </insert>
+
+    <update id="deleteById">
+        UPDATE shangpintupian
+        SET isDelete = 1
+        WHERE
+            id = #{id}
+    </update>
+    <update id="deleteByIds">
+        update shangpintupian set isDelete=1 where  isDelete=0 and id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </update>
+    <update id="deleteByShangPinId">
+        UPDATE shangpintupian
+        SET isDelete = 1
+        WHERE
+            shangpinid = #{shangPinId}
+    </update>
+
+    <select id="getTuPianListByShangPinId" resultType="com.example.vshopadmin.model.ShangPinTuPian">
+        select * from shangpintupian where isDelete =0 and shangpinId=#{shangPinId}
+    </select>
+</mapper>

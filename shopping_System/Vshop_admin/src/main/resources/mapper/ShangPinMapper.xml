@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.vshopadmin.dao.ShangPinDao">
+    <resultMap id="BaseResultMap" type="com.example.vshopadmin.model.ShangPin">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="pinPai" column="pinpai" jdbcType="VARCHAR"/>
+        <result property="mingCheng" column="mingcheng" jdbcType="VARCHAR"/>
+        <result property="shangPinBianHao" column="shangpinbianhao" jdbcType="CHAR"/>
+        <result property="jiaGe" column="jiage" jdbcType="DECIMAL"/>
+        <result property="isDelete" column="isDelete" jdbcType="BIT"/>
+    </resultMap>
+
+
+    <resultMap id="WithTuPian" type="com.example.vshopadmin.model.ShangPin" extends="BaseResultMap">
+        <collection property="imgList" ofType="com.example.vshopadmin.model.ShangPinTuPian">
+            <id property="id" column="imgId" jdbcType="BIGINT"/>
+            <result property="imgUrl" column="imgUrl" jdbcType="VARCHAR"/>
+        </collection>
+    </resultMap>
+
+    <insert id="add" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO shangpin (
+            pinpai,
+            mingcheng,
+            shangpinbianhao,
+            jiage
+        )
+        VALUES
+            (
+                #{pinPai},
+                #{mingCheng},
+                #{shangPinBianHao},
+                #{jiaGe}
+            )
+    </insert>
+
+    <update id="update">
+        UPDATE shangpin
+        SET pinpai = #{pinPai},
+            mingcheng = #{mingCheng},
+            shangpinbianhao = #{shangPinBianHao},
+            jiage =#{jiaGe}
+        WHERE
+            isDelete = 0
+          AND id = #{id}
+    </update>
+
+    <update id="deleteById">
+        UPDATE shangpin
+        SET isDelete=1
+        WHERE id = #{id}
+    </update>
+
+    <update id="deleteByIds">
+        UPDATE shangpin
+        SET isDelete=1
+        WHERE id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </update>
+
+
+    <select id="getDetailsById" resultMap="WithTuPian">
+        SELECT
+            sp.*, tp.id AS imgId,
+            tp.imgUrl
+        FROM
+            shangpin sp
+                LEFT JOIN shangpintupian tp ON sp.id = tp.shangpinid
+        WHERE
+            sp.isDelete = 0
+          AND tp.isDelete = 0
+          AND sp.id = #{id}
+    </select>
+    <select id="getAll" resultType="com.example.vshopadmin.model.ShangPin">
+        select * from shangpin where isDelete=0
+    </select>
+    <select id="getById" resultMap="BaseResultMap">
+        select *
+        from shangpin where id=#{id} and isDelete=0
+    </select>
+    <select id="getListByKey" resultType="com.example.vshopadmin.model.ShangPin">
+        select *
+        from shangpin where isDelete =0 and (pinpai like concat('%',#{key},'%')or mingcheng like concat('%',#{key},'%') )
+    </select>
+    <select id="getShowList" resultMap="WithTuPian">
+        SELECT
+            sp.*, tp.id AS imgId,
+            tp.imgUrl
+        FROM
+            shangpin sp
+                LEFT JOIN shangpintupian tp ON sp.id = tp.shangpinId
+        WHERE
+            sp.isDelete = 0
+          AND (
+                tp.isDelete IS NULL
+                OR tp.isDelete = 0
+            )
+        GROUP BY
+            sp.id
+    </select>
+</mapper>

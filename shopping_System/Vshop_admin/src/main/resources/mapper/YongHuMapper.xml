@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.vshopadmin.dao.YongHuDao">
+    <resultMap id="BaseResultMap" type="com.example.vshopadmin.model.YongHu">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="yonghuming" property="yongHuMing"  jdbcType="VARCHAR"/>
+        <result column="mima" property="miMa" jdbcType="VARCHAR"/>
+        <result column="shifoujinyong" property="shiFouJinYong" jdbcType="BIT"/>
+        <result  column="isDelete" property="isDelete" jdbcType="BIT"/>
+    </resultMap>
+
+    <insert id="addYongHu">
+        insert into yonghu(yonghuming,mima)
+        values(#{yongHuMing},#{miMa})
+    </insert>
+
+    <update id="updateYongHu">
+        update yonghu set
+        mima=#{miMa}
+     where isDelete =0 and id =#{id}
+    </update>
+
+    <update id="deleteYongHuById">
+        update yonghu
+        set isDelete = 1
+        where id=#{id} and isDelete=0
+    </update>
+
+    <update id="deleteYongHuByIds">
+        update yonghu set isDelete=1 where  isDelete=0 and id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+        #{id}
+        </foreach>
+    </update>
+    <update id="JinYong">
+        update yonghu set shifoujinyong=1 where id=#{id}
+    </update>
+    <update id="QiYong">
+        update yonghu set shifoujinyong=0 where id=#{id}
+    </update>
+    <select id="getAll" resultType="com.example.vshopadmin.model.YongHu">
+        select * from yonghu where isDelete=0
+    </select>
+
+    <select id="getById" resultType="com.example.vshopadmin.model.YongHu">
+        select *
+        from yonghu where isDelete=0 and id=#{id}
+    </select>
+    <select id="getListByKey" resultType="com.example.vshopadmin.model.YongHu">
+        select *
+        from yonghu where isDelete =0 and yonghuming like concat('%',#{key},'%')
+    </select>
+    <select id="existsYongHuMing" resultType="java.lang.Integer">
+        select exists (
+                       select id from yonghu
+                       where yonghuming = #{yongHuMing})
+    </select>
+</mapper>
