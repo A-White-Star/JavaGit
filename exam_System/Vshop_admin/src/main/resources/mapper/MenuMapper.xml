@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.white.examsystem.dao.MenuDao">
+    <resultMap id="BaseResultMap" type="com.white.examsystem.model.Menu">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="url" column="url" jdbcType="VARCHAR"/>
+        <result property="path" column="path" jdbcType="VARCHAR"/>
+        <result property="sort" column="sort" jdbcType="INTEGER"/>
+        <result property="isDelete" column="isDelete" jdbcType="BIT"/>
+        <result property="icon" column="icon" jdbcType="VARCHAR"/>
+        <result property="fuMenuId" column="fumenuid" jdbcType="INTEGER"/>
+    </resultMap>
+
+
+    <resultMap id="MapWithCharacter" type="com.white.examsystem.model.Menu" extends="BaseResultMap">
+        <collection property="characterList" ofType="com.white.examsystem.model.Character">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="characterNameEN" column="characternameEN" jdbcType="VARCHAR"/>
+            <result property="characterNameCN" column="characternameCN" jdbcType="VARCHAR"/>
+            <result property="isDelete" column="isDelete" jdbcType="BIT"/>
+        </collection>
+    </resultMap>
+
+    <resultMap id="MenuAndSubMenu" type="com.white.examsystem.model.Menu" extends="BaseResultMap">
+        <collection property="subMenu" ofType="com.white.examsystem.model.Menu">
+            <id property="id" column="sid" jdbcType="INTEGER"/>
+            <result property="name" column="sname" jdbcType="VARCHAR"/>
+            <result property="url" column="surl" jdbcType="VARCHAR"/>
+            <result property="path" column="spath" jdbcType="VARCHAR"/>
+            <result property="sort" column="ssort" jdbcType="INTEGER"/>
+            <result property="isDelete" column="sisDelete" jdbcType="BIT"/>
+            <result property="fuMenuId" column="sfumenuid" jdbcType="INTEGER"/>
+            <result property="icon" column="sicon" jdbcType="VARCHAR"/>
+        </collection>
+    </resultMap>
+
+    <select id="getMenuList" resultMap="MapWithCharacter">
+        SELECT
+            cd.*, js.id AS id,
+            js.characternameCN,
+            js.characternameEN,
+            js.isDelete AS jsIsDelete
+        FROM
+            menu cd
+                LEFT JOIN charactermenu jscd ON cd.id = jscd.menuId
+                LEFT JOIN `character` js ON js.id = jscd.characterid
+        WHERE
+            cd.isDelete = 0
+          AND jscd.isDelete = 0
+          AND js.isDelete = 0
+    </select>
+
+    <select id="getAll" resultType="com.white.examsystem.model.Menu">
+        select id,name,url,path,fumenuid,icon,sort,isDelete from menu where isDelete=0
+    </select>
+
+    <select id="getMenuListByUserId" resultMap="MenuAndSubMenu">
+        SELECT DISTINCT
+            cd.*
+        FROM
+            (
+                SELECT
+                    t1.*, t2.id sid,
+                    t2. name sname,
+                    t2.url surl,
+                    t2.path spath,
+                    t2.fumenuid sfumenuid,
+                    t2.sort ssort,
+                    t2.isDelete sIsDelete,
+                    t2.icon sicon
+                FROM
+                    (
+                        SELECT
+                            *
+                        FROM
+                            menu
+                        WHERE
+                            isDelete = 0
+                          AND fumenuid = 1
+                    ) t1
+                        LEFT JOIN menu t2 ON t1.id = t2.fumenuid
+                WHERE
+                    t2.isDelete = 0
+                   OR t2.isDelete IS NULL
+            ) cd,
+            (
+                SELECT
+                    id
+                FROM
+                    charactermenu
+                WHERE
+                    isDelete = 0
+                  AND characterid IN (
+                    SELECT
+                        characterId
+                    FROM
+                        usercharacter
+                    WHERE
+                        isDelete = 0
+                      AND userid = #{userId}
+                )
+            ) t3
+        WHERE
+            cd.id = t3.Id
+           OR cd.sid = t3.Id
+        ORDER BY
+            sort,
+            ssort
+    </select>
+
+    <select id="getById" resultType="com.white.examsystem.model.Menu">
+        select id,name,url,path,fumenuid,icon,sort,isDelete from menu where isDelete=0 and id=#{id}
+    </select>
+
+    <select id="getListByKey" resultType="com.white.examsystem.model.Menu">
+        select id,name,url,path,fumenuid,icon,sort,isDelete from menu where isDelete=0 and name like concat('%',#{key},'%')
+    </select>
+
+<!--    <select id="existsMingCheng" resultType="java.lang.Integer">-->
+<!--    select exists (-->
+<!--               select id from caidan-->
+<!--    where (fucaidanId =1 or fucaidanId =#{fuCaiDanId})-->
+<!--    and mingcheng = #{mingCheng})-->
+<!--    </select>-->
+<!--    -->
+    <select id="getFirstMenu" resultType="com.white.examsystem.model.Menu">
+        SELECT
+            id,
+            name
+        FROM
+            menu
+        WHERE
+            isDelete = 0
+          AND (
+               fumenuid IS NULL
+                OR fumenuid = 1
+            )
+    </select>
+
+    <select id=" getAllMenuAndSubMenuList" resultMap="MenuAndSubMenu">
+        SELECT
+            t1.*, t2.id sid,
+            t2.name sname,
+            t2.url surl,
+            t2.path spath,
+            t2.fumenuid sfumenuid,
+            t2.sort ssort,
+            t2.isDelete sIsDelete,
+            t2.icon sicon
+        FROM
+            (
+                SELECT
+                    *
+                FROM
+                    menu
+                WHERE
+                    isDelete = 0
+                  AND fumenuid = 1
+            ) t1
+                LEFT JOIN menu t2 ON t1.id = t2.fumenuid
+        WHERE
+            t2.isDelete = 0
+           OR t2.isDelete IS NULLL
+    </select>
+
+    <select id="getMenuListCharacterId" resultType="com.white.examsystem.model.Menu">
+        SELECT
+            *
+        FROM
+            menu
+        WHERE
+                id NOT IN (
+                SELECT DISTINCT
+                    fumenuid
+                FROM
+                    menu
+                WHERE
+                    fumenuid IS NOT NULL
+            )
+          AND id IN (
+            SELECT
+                menuid
+            FROM
+                charactermenu
+            WHERE
+                isDelete = 0
+              AND characterid = 1
+              AND isDelete = 0
+        )
+    </select>
+</mapper>

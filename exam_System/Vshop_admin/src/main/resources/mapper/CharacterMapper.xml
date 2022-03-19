@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.white.examsystem.dao.CharacterDao">
+    <resultMap id="BaseResultMap" type="com.white.examsystem.model.Character">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="jueSeMingCheng" column="juesemingcheng" jdbcType="VARCHAR"/>
+        <result property="xianShiMingCheng" column="xianshimingcheng" jdbcType="VARCHAR"/>
+        <result property="isDelete" column="isDelete" jdbcType="BIT"/>
+    </resultMap>
+    <select id="getAllJueSeList" resultType="com.white.examsystem.model.Character">
+        SELECT id, juesemingcheng,xianshimingcheng,isDelete FROM juese
+        WHERE isDelete=0
+    </select>
+    <select id="getCharacterById" resultType="com.white.examsystem.model.Character">
+        SELECT id, juesemingcheng,xianshimingcheng,isDelete FROM juese
+        WHERE isDelete=0 AND id=#{id}
+    </select>
+</mapper>

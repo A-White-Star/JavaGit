@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.white.examsystem.dao.TestDao">
+    <resultMap id="BaseResultMap" type="com.white.examsystem.model.Test">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="testNumber" column="testnumber" jdbcType="VARCHAR"/>
+        <result property="testName" column="testname" jdbcType="VARCHAR"/>
+        <result property="teacherName" column="teachername" jdbcType="VARCHAR"/>
+        <result property="place" column="place" jdbcType="VARCHAR"/>
+        <result property="isDelete" column="isDelete" jdbcType="BIT"/>
+    </resultMap>
+
+
+    <insert id="add" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO test (
+            testnumber,
+            testname,
+            teachername,
+            place
+        )
+        VALUES
+            (
+                #{testNumber},
+                #{testName},
+                #{teacherName},
+                #{place}
+            )
+    </insert>
+
+    <update id="update">
+        UPDATE test
+        SET testnumber = #{testNumber},
+            testname = #{testName},
+            teachername = #{teacherName},
+            place =  #{place}
+        WHERE
+            isDelete = 0
+          AND id = #{id}
+    </update>
+
+    <update id="deleteById">
+        UPDATE test
+        SET isDelete=1
+        WHERE id = #{id}
+    </update>
+
+    <update id="deleteByIds">
+        UPDATE test
+        SET isDelete=1
+        WHERE id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </update>
+
+
+    <select id="getAll" resultType="com.white.examsystem.model.Test">
+        select * from test where isDelete=0
+    </select>
+
+    <select id="getById" resultMap="BaseResultMap">
+        select *
+        from test where id=#{id} and isDelete=0
+    </select>
+
+    <select id="getListByKey" resultType="com.white.examsystem.model.Test">
+        SELECT
+            *
+        FROM
+            test
+        WHERE
+            isDelete = 0
+          AND (
+                testname LIKE CONCAT('%', #{key}, '%')
+                OR testnumber LIKE CONCAT('%',  #{key}, '%')
+                OR place LIKE CONCAT('%',  #{key}, '%')
+            )
+    </select>
+</mapper>

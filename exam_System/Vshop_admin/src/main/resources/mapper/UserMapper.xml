@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.white.examsystem.dao.UserDao">
+    <resultMap id="BaseResultMap" type="com.white.examsystem.model.User">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="username" property="userName" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="sex" property="sex" jdbcType="BIT"/>
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+        <result column="isDelete" property="isDelete" jdbcType="BIT"/>
+    </resultMap>
+    <insert id="addUser">
+        INSERT INTO USER (
+            username,
+            NAME,
+            sex,
+            phone,
+            PASSWORD,
+            isDelete
+        )
+        VALUES
+            (
+                #{userName},
+                #{name},
+                #{sex},
+                #{phone},
+                '$2a$10$Rm9CElG149J.xXvTykoPMuOFN29VXp3IY/xKCVGgaJoGb92NPavo2',
+                0
+            )
+    </insert>
+
+    <insert id="addUserCharacterByUserId">
+        insert into usercharacter(userid,characterid,isDelete)
+        values
+        <foreach collection="characterIds" item="characterId" separator=",">
+         (#{userId},#{characterId},0)
+        </foreach>
+    </insert>
+
+    <update id="updateUser">
+        UPDATE USER
+        SET username = #{userName},
+            NAME = #{userName},
+            sex =  #{name},
+            phone =  #{sex}
+        WHERE
+            isDelete = 0
+          AND id =  #{id}
+    </update>
+    <update id="deleteUserById">
+        UPDATE USER
+        SET isDelete = 1
+        WHERE
+            id = #{id} and isDelete=0
+    </update>
+    <update id="deleteUserByIds">
+        update user set isDelete=1 where  isDelete=0 and id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </update>
+    <update id="initPassword">
+        update user set password='$2a$10$Rm9CElG149J.xXvTykoPMuOFN29VXp3IY/xKCVGgaJoGb92NPavo2'
+        where isDelete =0 and id=#{id}
+    </update>
+    <update id="deleteUserCharacterByUserId">
+        update usercharacter set isDelete =1 where isDelete = 0 and userId =#{userId}
+    </update>
+    <select id="loadUserByUsername" resultMap="BaseResultMap">
+        SELECT * FROM user WHERE username = #{userName} AND isDelete = 0
+    </select>
+    <select id="getCharacterList" resultType="com.white.examsystem.model.Character">
+        SELECT
+            js.*
+        FROM
+            usercharacter uc
+                LEFT JOIN `character` js ON uc.characterid = js.id
+        WHERE
+            js.isDelete = 0
+          AND uc.isDelete = 0
+          AND uc.userid = #{userid}
+    </select>
+    <select id="getAll" resultType="com.white.examsystem.model.User">
+        SELECT * FROM user WHERE isDelete=0
+    </select>
+    <select id="getListByKey" resultType="com.white.examsystem.model.User">
+        SELECT * FROM user WHERE isDelete=0 AND (username like concat('%',#{key},'%')
+            or name like concat('%',#{key},'%')
+            or phone like concat('%',#{key},'%'))
+    </select>
+    <select id="getById" resultType="com.white.examsystem.model.User">
+        SELECT * FROM user WHERE isDelete=0 AND id=#{id}
+    </select>
+    <select id="existsUserName" resultType="java.lang.Integer">
+        select exists (
+                       select id from user
+                       where name = #{name})
+    </select>
+    <select id="existsPhone" resultType="java.lang.Integer">
+        select exists (
+                       select id from user
+                       where phone = #{phone})
+    </select>
+</mapper>
