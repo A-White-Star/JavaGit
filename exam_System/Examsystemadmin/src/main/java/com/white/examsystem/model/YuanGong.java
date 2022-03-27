@@ -15,14 +15,13 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class User implements UserDetails {
-    private Integer id;
-    private String userNumber;
-    private String userName;
-    private String name;
-    private Boolean sex;
-    private String phone;
-    private String password;
+public class YuanGong implements UserDetails {
+    private  Integer id;
+    private String yongHuMing;
+    private String zhenShiXingMing;
+    private Boolean xingBie;
+    private String shouJiHao;
+    private String miMa;
     private Boolean isDelete;
 
 
@@ -32,21 +31,20 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        for(
-            Character item:characterList){
-            authorities.add(new SimpleGrantedAuthority("ROLE_"+item.getCharacterNameCN()));
+        for(Character item: characterList){
+            authorities.add(new SimpleGrantedAuthority("ROLE_"+item.getCharacterNameEN()));
         }
         return authorities;
     }
     @JsonIgnore
     @Override
     public String getPassword() {
-        return this.password;
+        return this.miMa;
     }
     @JsonIgnore
     @Override
     public String getUsername() {
-        return this.userName;
+        return this.yongHuMing;
     }
 
     @JsonIgnore

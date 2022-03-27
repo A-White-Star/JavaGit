@@ -111,7 +111,7 @@
         LEFT JOIN caidan t2 on t1.id=t2.fucaidanId
         WHERE t2.isDelete =0 or t2.isDelete is NULL
     </select>
-    <select id="getCaiDanListByJueSeId" resultType="com.example.vshopadmin.model.CaiDan">
+    <select id="getMenuListByCharacterId" resultType="com.white.examsystem.model.Menu">
         SELECT * FROM caidan WHERE id NOT in (SELECT DISTINCT fucaidanId FROM caidan WHERE fucaidanId IS NOT NULL)
         AND id in (SELECT caidanId FROM juesecaidan WHERE isDelete = 0 AND jueseId =#{jueSeId})
         AND isDelete =0
