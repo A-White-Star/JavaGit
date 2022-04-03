@@ -31,7 +31,6 @@ public class UserController {
         return userService.initPassword(id);
     }
     @PutMapping("/user")
-
     public RespBean updateUser(@RequestBody User item){
         return userService.updateUser(item);
     }
@@ -53,7 +52,7 @@ public class UserController {
             return RespBean.success(userService.getUserCharacterById(id));
     }
     @PostMapping("/usercharacter")
-    public RespBean fenPeiJueSe(@RequestParam("userId") Integer userId, @RequestParam("characterIds") Integer[] characterIds){
+    public RespBean fenPeiCharacter(@RequestParam("userId") Integer userId, @RequestParam("characterIds") Integer[] characterIds){
         if(userId==null)return RespBean.fail(-6,"缺少关键参数");
         int delCount= userService.deleteUserCharacterByUserId(userId);
         int addCount=0;

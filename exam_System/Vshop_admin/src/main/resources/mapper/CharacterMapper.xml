@@ -3,16 +3,31 @@
 <mapper namespace="com.white.examsystem.dao.CharacterDao">
     <resultMap id="BaseResultMap" type="com.white.examsystem.model.Character">
         <id property="id" column="id" jdbcType="INTEGER"/>
-        <result property="jueSeMingCheng" column="juesemingcheng" jdbcType="VARCHAR"/>
-        <result property="xianShiMingCheng" column="xianshimingcheng" jdbcType="VARCHAR"/>
+        <result property="characterNameEN" column="characterNameEN" jdbcType="VARCHAR"/>
+        <result property="characterNameCN" column="characterNameCN" jdbcType="VARCHAR"/>
         <result property="isDelete" column="isDelete" jdbcType="BIT"/>
     </resultMap>
-    <select id="getAllJueSeList" resultType="com.white.examsystem.model.Character">
-        SELECT id, juesemingcheng,xianshimingcheng,isDelete FROM juese
-        WHERE isDelete=0
+    <select id="getAllCharacterList" resultType="com.white.examsystem.model.Character">
+        SELECT
+            id,
+            characterNameEN,
+            characterNameCN,
+            isDelete
+        FROM
+            `character`
+        WHERE
+            isDelete = 0
     </select>
     <select id="getCharacterById" resultType="com.white.examsystem.model.Character">
-        SELECT id, juesemingcheng,xianshimingcheng,isDelete FROM juese
-        WHERE isDelete=0 AND id=#{id}
+        SELECT
+            id,
+            characterNameEN,
+            characternameCN,
+            isDelete
+        FROM
+            `character`
+        WHERE
+            isDelete = 0
+        AND id=#{id}
     </select>
 </mapper>

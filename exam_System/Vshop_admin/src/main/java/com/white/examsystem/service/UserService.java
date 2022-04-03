@@ -39,23 +39,22 @@ public class UserService implements UserDetailsService {
     }
     //增删改、批量删除
     public RespBean addUser(User item){
-        if(item==null
-                ||item.getName()==null
-                ||item.getUsername()==null
-                ||item.getPhone()==null){
-            return RespBean.fail(-6,"缺少关键参数");
-        }
+//        if(item==null
+//                ||item.getUsername()==null
+//                ||item.getName()==null){
+//            return RespBean.fail(-6,"缺少关键参数");
+//        }
         if(dao.existsUserName(item.getUsername())==1
                 ||dao.existsPhone(item.getPhone())==1){
-				            return RespBean.fail(-5,"关键参数重复");
+            return RespBean.fail(-5,"关键参数重复");
         }
         return dao.addUser(item)==1?RespBean.success():RespBean.fail();
     }
+
     public RespBean updateUser(User item) {
         if (item == null
                 || item.getName() == null
                 || item.getId() == null
-                || item.getUsername() == null
                 || item.getPhone() == null) {
             return RespBean.fail(-6, "缺少关键参数");
         }
@@ -65,13 +64,10 @@ public class UserService implements UserDetailsService {
                 &&dao.existsPhone(item.getPhone()) == 1 ){
             return RespBean.fail(-5, "关键参数重复");
         }
-        if (!old.getUsername().equals(item.getUsername())
-                && dao.existsUserName(item.getUsername()) == 1) {
-            return RespBean.fail(-5, "关键参数重复");
-        }
         return dao.updateUser(item)==1?RespBean.success():RespBean.fail();
 
     }
+
     public RespBean deleteUserById(Integer id) {
         return dao.deleteUserById(id)==1?RespBean.success():RespBean.fail();
     }

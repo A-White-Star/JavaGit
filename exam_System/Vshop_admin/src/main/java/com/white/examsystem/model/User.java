@@ -17,7 +17,6 @@ import java.util.List;
 @NoArgsConstructor
 public class User implements UserDetails {
     private Integer id;
-    private String userNumber;
     private String userName;
     private String name;
     private Boolean sex;
@@ -43,7 +42,7 @@ public class User implements UserDetails {
     public String getPassword() {
         return this.password;
     }
-    @JsonIgnore
+    //@JsonIgnore
     @Override
     public String getUsername() {
         return this.userName;

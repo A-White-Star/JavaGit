@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
 	<div>
   <el-tabs v-model="activeName" style="width: 100%; min-height: 800px;" >
     <el-tab-pane label="员工管理" name="xx1" >
@@ -29,5 +29,5 @@
 </script>
 
 <style>
-</style>
+</style> -->
  

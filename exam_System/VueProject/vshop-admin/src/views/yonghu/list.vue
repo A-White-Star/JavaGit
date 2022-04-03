@@ -13,11 +13,10 @@
 			<el-table :data="tableData" size="mini" border stripe style="width: 90%"
 				@selection-change="handleSelectionChange">
 				<el-table-column type="selection" width="55" />
-				<el-table-column prop="userNumber" label="用户编号" width="100" />
-				<el-table-column prop="userName" label="用户名" width="100" />
-				<el-table-column prop="name" label="真实姓名" width="150" />
-				<el-table-column prop="sex" label="性别" width="150" />
-				<el-table-column prop="phone" label="手机号" width="80" />
+				<el-table-column prop="username" label="编号" width="100" />
+				<el-table-column prop="name" label="姓名" width="150" />
+				<el-table-column prop="sex" label="性别" width="100" />
+				<el-table-column prop="phone" label="手机号" width="180" />
 				<el-table-column label="操作">
 					<template #default="scope">
 						<el-button plain size="mini" icon="fa fa-pencil"
@@ -33,16 +32,17 @@
 			<el-button type="danger" size="mini" style="margin-top: 10px;"
 				:disabled="this.multipleSelection.length == 0" @click="deleteDatas()">批量删除</el-button>
 		</div>
+		
 		<div>
 			<el-dialog v-model="dialogShow" width="30%" :title="title">
 				<div style="margin-bottom: 10px;">
-					<el-tag type="success">用户</el-tag>
+					<el-tag type="success">编号</el-tag>
 					<el-input v-model="item.userName" size="mini" style="width: 100%;margin-top: 10px;"
 						prefix-icon="el-icon-edit">
 					</el-input>
 				</div>
 				<div style="margin-bottom: 10px;">
-					<el-tag type="success">真实姓名</el-tag>
+					<el-tag type="success">姓名</el-tag>
 					<el-input v-model="item.name" size="mini" style="width: 100%; margin-top: 10px;"
 						prefix-icon="el-icon-edit">
 					</el-input>
@@ -83,7 +83,6 @@
 				dialogShow: false,
 				item: {
 					"id": null,
-					"userNumber":null,
 					"userName": null,
 					"name": null,
 					"sex": null,
@@ -120,7 +119,6 @@
 				this.dialogShow = false
 				this.item = {
 					"id": null,
-					"userNumber":null,
 					"userName": null,
 					"name": null,
 					"sex": null,
@@ -128,7 +126,7 @@
 				}
 			},
 			add() {
-				if (!this.item.userNumber || this.item.userNumber == '') {
+				if (!this.item.userName || this.item.userName == '') {
 					this.$message.error("请输入用户编号！")
 					return;
 				}
@@ -141,7 +139,6 @@
 					resp => {
 						this.item = {
 							"id": null,
-							"userNumber":null,
 							"userName": null,
 							"name": null,
 							"sex": null,
@@ -154,7 +151,7 @@
 			},
 			edit() {
 				let that = this
-				if (!this.item.userNumber || this.item.userNumber == '') {
+				if (!this.item.userName || this.item.userName == '') {
 					this.$message.error("请输入用户编号！")
 					return;
 				}
@@ -163,15 +160,14 @@
 					return;
 				}
 				//转换前台性别参数类型与后台性别参数类型一致
-				if (this.item.xingBie == '男') this.item.xingBie = 1;
-				if (this.item.xingBie == '女') this.item.xingBie = 0;
+				if (this.item.sex == '男') this.item.sex = 1;
+				if (this.item.sex == '女') this.item.sex = 0;
 				//数据传回
 				this.$api.putRequest("/api/system/config/user", this.item).then(
 					resp => {
 						that.tableData[that.index] = that.item
 						this.item = {
 							"id": null,
-							"userNumber":null,
 							"userName": null,
 							"name": null,
 							"sex": null,

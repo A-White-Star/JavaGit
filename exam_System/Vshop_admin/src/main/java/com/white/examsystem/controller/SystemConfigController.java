@@ -16,8 +16,8 @@ public class SystemConfigController {
     @Autowired
     MenuService menuService;
 
-//    @Autowired
-//    CharacterService characterService;
+    @Autowired
+    CharacterService characterService;
 
     @GetMapping("/menu")
      public RespBean getMenu(){
@@ -25,12 +25,12 @@ public class SystemConfigController {
         return RespBean.success(data);
     }
 
-//    @GetMapping("/juese")
-//    public RespBean getAllJueSeList(){
-//        List<Character> allJueSeList= jueSeService.getAllJueSeList();
-//        return RespBean.success(allJueSeList);
-//    }
-//
+    @GetMapping("/character")
+    public RespBean getAllJueSeList(){
+        List<Character> allCharacterList= characterService.getAllCharacterList();
+        return RespBean.success(allCharacterList);
+    }
+//————————————————character
 //    @PostMapping("/juese")
 //    public RespBean addJueSe(@RequestBody Character item){
 //        if(item==null||item.getJueSeMingCheng()==null||item.getJueSeMingCheng().trim().length()==0)
@@ -54,6 +54,7 @@ public class SystemConfigController {
 //        }
 //        return jueSeService.updateJueSe(item);
 //    }
+
 //    @DeleteMapping("/juese/{id}")
 //    public  RespBean deleteJueSe(@PathVariable("id") Integer id){
 //        if(id==null){ return RespBean.fail(-6,"缺少关键参数"); }
@@ -71,7 +72,7 @@ public class SystemConfigController {
 //        if(id == null){ return RespBean.fail(-6,"缺少关键参数");}
 //        return  RespBean.success(jueSeService.getJueSeById(id));
 //    }
-//
+//_____________menu
 //    @GetMapping("/caidanlist")
 //    public RespBean getCaiDanList(){
 //        return RespBean.success(menuService.getList());
