@@ -20,7 +20,7 @@
 		</el-header>
 		<el-container>
 			<el-aside width="200px">
-				<el-menu class="el-menu-vertical-demo" router unique-opened active-text-color="#edbbbc"
+				<el-menu class="el-menu-vertical-demo" router  active-text-color="#edbbbc"
 					background-color="#456280" text-color="#fff">
 					<template v-for="(item,index) in routes" :key="index">
 						<el-submenu :index="index+''" v-if="!item.hidden">

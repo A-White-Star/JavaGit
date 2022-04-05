@@ -5,6 +5,7 @@
         <id property="id" column="id" jdbcType="BIGINT"/>
         <result property="testNumber" column="testnumber" jdbcType="VARCHAR"/>
         <result property="testName" column="testname" jdbcType="VARCHAR"/>
+        <result property="date" column="date" jdbcType="TIMESTAMP"/>
         <result property="teacherName" column="teachername" jdbcType="VARCHAR"/>
         <result property="place" column="place" jdbcType="VARCHAR"/>
         <result property="isDelete" column="isDelete" jdbcType="BIT"/>
@@ -16,6 +17,7 @@
             testnumber,
             testname,
             teachername,
+            date,
             place
         )
         VALUES
@@ -23,6 +25,7 @@
                 #{testNumber},
                 #{testName},
                 #{teacherName},
+                #{date},
                 #{place}
             )
     </insert>
@@ -32,6 +35,7 @@
         SET testnumber = #{testNumber},
             testname = #{testName},
             teachername = #{teacherName},
+            date =#{date},
             place =  #{place}
         WHERE
             isDelete = 0
@@ -75,5 +79,31 @@
                 OR testnumber LIKE CONCAT('%',  #{key}, '%')
                 OR place LIKE CONCAT('%',  #{key}, '%')
             )
+    </select>
+
+    <select id="existsTest" resultType="java.lang.Integer">
+        SELECT
+            EXISTS (
+                    SELECT
+                        id
+                    FROM
+                        test
+                    WHERE
+                    date = #{date}
+		AND place = #{place}
+	)
+    </select>
+
+    <select id="existsTeacher" resultType="java.lang.Integer">
+        SELECT
+            EXISTS (
+                    SELECT
+                        id
+                    FROM
+                        test
+                    WHERE
+                    date = #{date}
+		AND teachername=#{teacherName}
+	)
     </select>
 </mapper>

@@ -12,6 +12,7 @@
 				<el-table-column prop="id" label="编号" width="80" />
 				<el-table-column prop="testNumber" label="考试编号" width="100" />
 				<el-table-column prop="testName" label="考试名称" width="150" />
+				<el-table-column prop="date" label="考试时间" width="150" />
 				<el-table-column prop="teacherName" label="监考教师" width="150" />
 				<el-table-column prop="place" label="地点" width="150" />
 				<el-table-column label="考试报名">
@@ -25,20 +26,19 @@
 		<div>
 			<el-dialog v-model="FormShow" width="30%" :title="title">
 				<el-form ref="form" :model="form" :rules="rules">
-					<h3 class="title">考试报名</h3>
 					<el-form-item label="考生名称" prop="username">
 						<el-input type="text" v-model="item.username" autocomplete="off" placeholder="请输入考生姓名">
 						</el-input>
 					</el-form-item>
+					<!-- <el-form-item label="班级" prop="class">
+						<el-input type="text" v-model="item.class" autocomplete="off" placeholder="请输入考生姓名">
+						</el-input>
+					</el-form-item> -->
 					<el-form-item label="性&nbsp;&nbsp;别" prop="sex">
-						<el-select v-model="item.sex"  size="small">
-						    <el-option
-						      v-for="item in options"
-						      :key="item.value"
-						      :label="item.label"
-						      :value="item.value"
-						    />
-						  </el-select>
+						<el-select v-model="item.sex" size="small">
+							<el-option v-for="item in options" :key="item.value" :label="item.label"
+								:value="item.value" />
+						</el-select>
 					</el-form-item>
 				</el-form>
 				<template #footer>
@@ -59,7 +59,7 @@
 				//form包含表单中的元素即成员对象。
 				form: {
 					username: '',
-					sex:[],
+					sex: [],
 				},
 				//rules则是对应的form表单元素的一些显示规则等
 				rules: {
@@ -68,23 +68,22 @@
 						message: '请输入名字',
 						triggere: 'blur'
 					},
-					sex:{
-						type:'array',
+					sex: {
+						type: 'array',
 						required: true,
 						message: '请选择性别',
 						triggere: 'blur'
 					}
-				
+
 				},
-				options:[
+				options: [{
+						value: '1',
+						label: '男',
+					},
 					{
-					    value: '1',
-					    label: '男',
-					  },
-					  {
-					      value: '0',
-					      label: '女',
-					    },
+						value: '0',
+						label: '女',
+					},
 				],
 				tableData: [],
 				key: '',
@@ -94,8 +93,9 @@
 					"userNumber": '',
 					"testName": '',
 					"teacherName": '',
+					"date":null,
 					"place": '',
-					"sex":null,
+					"sex": null,
 					"isDelete": false,
 				},
 			}
@@ -105,7 +105,7 @@
 		},
 		methods: {
 			search() {
-				this.$api.getRequest("/api/houtai/test/" + this.key).then(
+				this.$api.getRequest("/api/houtai/testbykey/" + this.key).then(
 					resp => {
 						this.tableData = resp.responseData
 					}
@@ -119,10 +119,30 @@
 				)
 			},
 			handleEnroll(index, data) {
-				this.title = "报名信息"
-				this.item = data
-				this.index = index
-				this.FormShow = true
+				let that = this
+				this.$confirm('确认报名科目为:[' + data.testName + ']的考试吗？',
+						'请再次确认操作', {
+							confirmButtonText: '确认',
+							cancelButtonText: '取消',
+							type: 'warning'
+						},
+					)
+					.then(() => {
+						that.$api.deleteRequest("/api/houtai/test/" + data.id).then(() => {
+							this.$message({
+								type: 'sucess',
+								message: '报名成功',
+							})
+							that.initList()
+						})
+					})
+					.catch(() => {
+						this.$message({
+							type: 'info',
+							message: '用户取消删除操作',
+						})
+					})
+
 			},
 			cancelDialog() {
 				this.$message({
@@ -135,6 +155,7 @@
 					"testNumber": '',
 					"testName": '',
 					"teacherName": '',
+					"date":null,
 					"place": '',
 					"isDelete": false,
 				}

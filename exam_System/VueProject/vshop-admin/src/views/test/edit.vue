@@ -13,6 +13,7 @@
 				<el-table-column prop="id" label="编号" width="80" />
 				<el-table-column prop="testNumber" label="考试编号" width="100" />
 				<el-table-column prop="testName" label="考试名称" width="150" />
+				<el-table-column prop="date" label="考试时间" width="150" />
 				<el-table-column prop="teacherName" label="监考教师" width="150" />
 				<el-table-column prop="place" label="地点" width="150" />
 				<el-table-column label="操作">
@@ -41,6 +42,16 @@
 					<el-input v-model="item.testName" size="mini" style="width: 100%; margin-top: 10px;"
 						prefix-icon="el-icon-edit" placeholder="必须以'/'开头，如:/xxxx">
 					</el-input>
+				</div>
+				<div>
+				      <el-tag type="success">考试时间</el-tag>
+				      <el-date-picker
+				        v-model="item.date"
+				        type="date"
+				        placeholder="请选择考试时间"
+				        format="YYYY-MM-DD hh:mm:ss"
+						value-format="YYYY-MM-DD hh:mm:ss"
+				      />
 				</div>
 				<div style="margin-bottom: 10px;">
 					<el-tag type="success">监考教师</el-tag>
@@ -78,6 +89,7 @@
 					testNumber: '',
 					testName: '',
 					teacherName: '',
+					date:null,
 					place: '',
 					isDelete: false,
 				}
@@ -88,7 +100,7 @@
 		},
 		methods: {
 			search() {
-				this.$api.getRequest("/api/houtai/test/" + this.key).then(
+				this.$api.getRequest("/api/houtai/testbykey/" + this.key).then(
 					resp => {
 						this.tableData = resp.responseData
 					}
@@ -174,6 +186,7 @@
 				    "testNumber": '',
 				    "testName": '',
 				    "teacherName": '',
+					"date":null,
 				    "place": '',
 				    "isDelete": false,
 				   }
@@ -199,6 +212,7 @@
 					        "testNumber": '',
 					        "testName": '',
 					        "teacherName": '',
+							"date":null,
 					        "place": '',
 					        "isDelete": false,
 				           }
@@ -211,10 +225,12 @@
 				let that = this
 				if (!this.item.testName
 				 || !this.item.testNumber
-				 || !this.item.teacherName) {
+				 || !this.item.teacherName
+				 || !this.item.date) {
 					this.$message.error("请填写完整信息！")
 					return;
 				}
+				// Log.d()
 				this.$api.putRequest("/api/houtai/test", this.item).then(
 					resp => {
 						that.tableData[that.index] = that.item
@@ -223,6 +239,7 @@
 					       "testNumber": '',
 					       "testName": '',
 					       "teacherName": '',
+						   "date":null,
 					       "place": '',
 					       "isDelete": false,
 						// this.initCaiDanList()

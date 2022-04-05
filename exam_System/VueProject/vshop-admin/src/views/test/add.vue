@@ -6,8 +6,8 @@
 					<el-tag type="success">考试编号</el-tag>
 				</td>
 				<td>
-					<el-input size="mini" prefix-icon="el-icon-edit" v-model="item.testNumber"
-					placeholder="请输入考试编号"></el-input>
+					<el-input size="mini" prefix-icon="el-icon-edit" v-model="item.testNumber" placeholder="请输入考试编号">
+					</el-input>
 				</td>
 			</tr>
 			<tr>
@@ -15,8 +15,17 @@
 					<el-tag type="success">考试名称</el-tag>
 				</td>
 				<td>
-					<el-input size="mini" prefix-icon="el-icon-edit" v-model="item.testName"
-					placeholder="请输入考试科目"></el-input>
+					<el-input size="mini" prefix-icon="el-icon-edit" v-model="item.testName" placeholder="请输入考试科目">
+					</el-input>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 200px; text-align: center;margin-right: 15px;">
+					<el-tag type="success">考试时间</el-tag>
+				</td>
+				<td>
+					<el-date-picker v-model="item.date" type="date" placeholder="请选择考试时间" format="YYYY-MM-DD hh:mm:ss"
+					value-format="YYYY-MM-DD hh:mm:ss" />
 				</td>
 			</tr>
 			<tr>
@@ -24,8 +33,8 @@
 					<el-tag type="success">监考教师</el-tag>
 				</td>
 				<td>
-					<el-input size="mini" prefix-icon="el-icon-edit" v-model="item.teacherName"
-						placeholder="请输入监考教师姓名"></el-input>
+					<el-input size="mini" prefix-icon="el-icon-edit" v-model="item.teacherName" placeholder="请输入监考教师姓名">
+					</el-input>
 				</td>
 			</tr>
 			<tr>
@@ -33,8 +42,7 @@
 					<el-tag type="success">地点</el-tag>
 				</td>
 				<td>
-					<el-input size="mini" prefix-icon="el-icon-edit" v-model="item.place"
-					placeholder="考场"></el-input>
+					<el-input size="mini" prefix-icon="el-icon-edit" v-model="item.place" placeholder="考场"></el-input>
 				</td>
 			</tr>
 		</table>
@@ -54,9 +62,11 @@
 					testNumber: '',
 					testName: '',
 					teacherName: '',
-					place: ''
+					date: null,
+					place: '',
+					isDelete: false,
 				},
-				addSuccessFlag:false,
+				addSuccessFlag: false,
 			}
 		},
 		methods: {
@@ -65,10 +75,10 @@
 				this.$router.replace("list")
 			},
 			handleSubmit() {
-				this.addSuccessFlag=false
+				this.addSuccessFlag = false
 				this.$api.putRequest("/api/houtai/test", this.item).then((res) => {
 					this.$router.replace("list")
-					this.addSuccessFlag=true
+					this.addSuccessFlag = true
 				})
 			}
 		},
@@ -76,11 +86,11 @@
 			this.$api.postRequest("/api/houtai/test", this.item).then((res) => {
 				this.item.id = res.responseData.id
 			})
-			this.addSuccessFlag=false
+			this.addSuccessFlag = false
 		},
 		beforeUnmount() {
-			if(!this.addSuccessFlag)
-			this.$api.deleteRequest("/api/houtai/test/" + this.item.id)
+			if (!this.addSuccessFlag)
+				this.$api.deleteRequest("/api/houtai/test/" + this.item.id)
 		}
 	}
 </script>
@@ -98,7 +108,7 @@
 	.add {
 		width: 100%;
 		/* border: 1px solid #26494B; */
-		margin: 20px 0px; 
+		margin: 20px 0px;
 	}
 
 	.foot {

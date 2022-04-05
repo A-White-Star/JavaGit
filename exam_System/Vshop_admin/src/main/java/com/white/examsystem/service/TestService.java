@@ -14,11 +14,23 @@ public class TestService {
     TestDao testDao;
 
     public RespBean add(Test item) {
+        if(testDao.existsTest(item.getDate(),item.getPlace())==1){
+            return RespBean.fail(-5,"已有考试预定！");
+        }
+        if(testDao.existsTeacher(item.getDate(),item.getTeacherName())==1){
+            return RespBean.fail(-5,"该教师当前时间段已有任务");
+        }
         int res = testDao.add(item);
         return res > 0 ? RespBean.success(item) : RespBean.fail();
     }
 
     public RespBean update(Test item) {
+        if(testDao.existsTest(item.getDate(),item.getPlace())==1){
+            return RespBean.fail(-5,"已有考试预定！");
+        }
+        if(testDao.existsTeacher(item.getDate(),item.getTeacherName())==1){
+            return RespBean.fail(-5,"该教师当前时间段已有任务");
+        }
         return testDao.update(item) > 0 ? RespBean.success() : RespBean.fail();
     }
 

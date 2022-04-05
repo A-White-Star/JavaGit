@@ -1,12 +1,9 @@
 <template>
-  <router-view />
+	<h3 class="title">考试成绩</h3>
 </template>
 
 <script>
 </script>
 
 <style>
-	html,body,#app{
-		height: 100%;
-	}
 </style>
