@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.white.examsystem.dao.MyExamDao">
+    <resultMap id="BaseResultMap" type="com.white.examsystem.model.MyExam">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="testId" column="testId" jdbcType="INTEGER"/>
+        <result property="scoreId" column="scoreId" jdbcType="INTEGER"/>
+    </resultMap>
+    <select id="getAllScoreByUserId" resultType="com.white.examsystem.model.MyExam">
+        SELECT
+            score
+        FROM
+            myexam
+        WHERE
+            userid = #{userId}
+    </select>
+
+    <select id="getTestListByUserId" resultType="com.white.examsystem.model.Test">
+    SELECT
+    t.*
+    FROM
+    myexam me
+    LEFT JOIN test t ON me.testid = t.id
+    WHERE
+    t.isDelete = 0
+    AND me.userid = #{userId}
+    </select>
+</mapper>

@@ -27,6 +27,7 @@ public class User implements UserDetails {
 
     private List<Character> characterList;
 
+
     @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

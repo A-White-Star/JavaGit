@@ -21,4 +21,5 @@ public class Test {
     private Boolean isDelete;
 
     private List<User> userList; //所有报名该考试的名单
+    private Integer scoreByUserId;
 }

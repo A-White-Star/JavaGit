@@ -54,6 +54,10 @@ public class TestService {
         return RespBean.success(testDao.getById(id));
     }
 
+    public RespBean getScoreListByUserId(Integer userId) {
+        return RespBean.success(testDao.getScoreListByUserId(userId));
+    }
+
     public List<Test> getShowList() {
         List<Test> showList = testDao.getShowList();
         return showList;

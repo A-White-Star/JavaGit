@@ -22,7 +22,7 @@ public class TestController {
     public RespBean enrollTest(@RequestParam("testId") Integer testId, @RequestParam("userId") Integer userId){
         return testService.enrollTest(testId, userId)>0?RespBean.success(): RespBean.fail();
     }
-    @DeleteMapping("/test")
+    @DeleteMapping("test")
     public RespBean deleteByIds(@RequestBody  Long[] ids){
         if(ids == null){
             return RespBean.fail(-6,"缺少关键参数");
@@ -44,5 +44,9 @@ public class TestController {
     @GetMapping("test")
     public RespBean getAll(){
         return testService.getAll();
+    }
+    @GetMapping("scorlistbyuserid/{userId}")
+    public RespBean getScoreListByUserId(@PathVariable("userId") Integer userId){
+        return testService.getScoreListByUserId(userId);
     }
 }

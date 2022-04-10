@@ -11,6 +11,13 @@
         <result property="isDelete" column="isDelete" jdbcType="BIT"/>
     </resultMap>
 
+    <resultMap id="WithScore" type="com.white.examsystem.model.Test" extends="BaseResultMap">
+        <association property="scoreByUserId" javaType="Integer">
+            <id property="score" column="score" jdbcType="INTEGER"/>
+<!--            <result property="score" column="score" jdbcType="INTEGER"/>-->
+        </association>
+
+    </resultMap>
 
     <insert id="add" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO test (
@@ -72,6 +79,18 @@
         WHERE
             USER .isDelete = 0
           AND me.testId = #{id}
+    </select>
+
+    <select id="getScoreListByUserId"  resultMap="WithScore" >
+        SELECT
+            t.*, 
+            me.score
+        FROM
+            test t
+                LEFT JOIN myexam me ON me.testid = t.id
+        WHERE
+            t.isDelete = 0
+          AND me.userid = #{userId}
     </select>
 
     <select id="getAll" resultType="com.white.examsystem.model.Test">

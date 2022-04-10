@@ -1,6 +1,7 @@
 package com.white.examsystem.dao;
 
 import com.white.examsystem.model.Character;
+import com.white.examsystem.model.MyExam;
 import com.white.examsystem.model.User;
 
 import java.util.List;
