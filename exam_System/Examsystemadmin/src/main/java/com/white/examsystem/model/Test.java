@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -18,4 +19,6 @@ public class Test {
     private String teacherName;
     private String place;
     private Boolean isDelete;
+
+    private List<User> userList; //所有报名该考试的名单
 }

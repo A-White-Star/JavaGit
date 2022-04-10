@@ -18,6 +18,10 @@ public class TestController {
     public RespBean update(@RequestBody Test item){
         return testService.update(item);
     }
+    @PostMapping("enroll")
+    public RespBean enrollTest(@RequestParam("testId") Integer testId, @RequestParam("userId") Integer userId){
+        return testService.enrollTest(testId, userId)>0?RespBean.success(): RespBean.fail();
+    }
     @DeleteMapping("/test")
     public RespBean deleteByIds(@RequestBody  Long[] ids){
         if(ids == null){

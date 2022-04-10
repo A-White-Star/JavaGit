@@ -34,6 +34,9 @@ public class TestService {
         return testDao.update(item) > 0 ? RespBean.success() : RespBean.fail();
     }
 
+    public int  enrollTest(Integer testId, Integer userId){
+        return  testDao.enroll(testId, userId);
+    }
     public RespBean deleteById(Long id) {
         return testDao.deleteById(id) > 0 ? RespBean.success() : RespBean.fail();
     }

@@ -30,6 +30,12 @@
             )
     </insert>
 
+    <insert id="enroll">
+        INSERT INTO myexam (testid, userId)
+        VALUES
+            (#{testId}, #{userId})
+    </insert>
+
     <update id="update">
         UPDATE test
         SET testnumber = #{testNumber},
@@ -57,6 +63,16 @@
         </foreach>
     </update>
 
+    <select id="getUserList" resultType="com.white.examsystem.model.User" >
+        SELECT
+            USER .*
+        FROM
+            myexam me
+                LEFT JOIN USER USER ON me.userId = USER .id
+        WHERE
+            USER .isDelete = 0
+          AND me.testId = #{id}
+    </select>
 
     <select id="getAll" resultType="com.white.examsystem.model.Test">
         select * from test where isDelete=0

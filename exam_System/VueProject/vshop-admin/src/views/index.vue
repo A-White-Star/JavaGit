@@ -55,7 +55,6 @@
 	export default {
 		data() {
 			return {
-//arrowRight:ArrowRight,
 				user: JSON.parse(window.sessionStorage.getItem("user"))
 			}
 		},
@@ -65,9 +64,6 @@
 			}
 		},
 		methods: {
-			// menuClick(index,indexPath){
-			// 	this.$router.push(index)
-			// },
 			handleCommand(cmd) {
 				let that = this
 				if (cmd == "logout") {
@@ -82,7 +78,6 @@
 						.then(() => {
 							that.$api.getRequest("/api/logout")
 							window.sessionStorage.removeItem("user")
-							//this.$store.commit('routes',[])
 							this.$store.state.routes = []
 							this.$router.replace("/")
 						})

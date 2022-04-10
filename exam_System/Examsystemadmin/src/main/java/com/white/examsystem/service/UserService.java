@@ -39,11 +39,11 @@ public class UserService implements UserDetailsService {
     }
     //增删改、批量删除
     public RespBean addUser(User item){
-//        if(item==null
-//                ||item.getUsername()==null
-//                ||item.getName()==null){
-//            return RespBean.fail(-6,"缺少关键参数");
-//        }
+        if(item==null
+                ||item.getUsername()==null
+                ||item.getName()==null){
+            return RespBean.fail(-6,"缺少关键参数");
+        }
         if(dao.existsUserName(item.getUsername())==1
                 ||dao.existsPhone(item.getPhone())==1){
             return RespBean.fail(-5,"关键参数重复");

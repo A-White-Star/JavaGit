@@ -117,13 +117,6 @@
         select id,name,url,path,fumenuid,icon,sort,isDelete from menu where isDelete=0 and name like concat('%',#{key},'%')
     </select>
 
-<!--    <select id="existsMingCheng" resultType="java.lang.Integer">-->
-<!--    select exists (-->
-<!--               select id from caidan-->
-<!--    where (fucaidanId =1 or fucaidanId =#{fuCaiDanId})-->
-<!--    and mingcheng = #{mingCheng})-->
-<!--    </select>-->
-<!--    -->
     <select id="getFirstMenu" resultType="com.white.examsystem.model.Menu">
         SELECT
             id,

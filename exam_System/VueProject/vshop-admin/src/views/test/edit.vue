@@ -230,7 +230,6 @@
 					this.$message.error("请填写完整信息！")
 					return;
 				}
-				// Log.d()
 				this.$api.putRequest("/api/houtai/test", this.item).then(
 					resp => {
 						that.tableData[that.index] = that.item
