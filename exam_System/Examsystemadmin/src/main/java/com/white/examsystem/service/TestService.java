@@ -25,6 +25,10 @@ public class TestService {
     }
 
     public RespBean update(Test item) {
+        if(null==item.getTestNumber()
+        ||null==item.getTestName()
+        ||null==item.getTeacherName()
+        ||null==item.getPlace()) {return RespBean.fail(-6,"缺少关键参数");}
         if(testDao.existsTest(item.getDate(),item.getPlace())==1){
             return RespBean.fail(-5,"已有考试预定！");
         }
@@ -56,11 +60,6 @@ public class TestService {
 
     public RespBean getScoreListByUserId(Integer userId) {
         return RespBean.success(testDao.getScoreListByUserId(userId));
-    }
-
-    public List<Test> getShowList() {
-        List<Test> showList = testDao.getShowList();
-        return showList;
     }
 
 }

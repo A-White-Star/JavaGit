@@ -13,12 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class MyExamController {
     @Autowired
     MyExamService myExamService;
-    @GetMapping("scorebyuserid/{userId}")
-    public RespBean getAllScoreByUserId(@PathVariable("userId") Integer userId){
-        return myExamService.getAllScoreByUserId(userId);
-    }
-    @GetMapping("testbyuserid/{userId}")
-    public RespBean getTestListByUserId(@PathVariable("userId") Integer userId){
-        return myExamService.getTestListByUserId(userId);
+    @GetMapping("studentbytestid/{testId}")
+    public RespBean getStudentByTestId(@PathVariable("testId") Integer testId){
+        return myExamService.getStudentByTestId(testId);
     }
 }

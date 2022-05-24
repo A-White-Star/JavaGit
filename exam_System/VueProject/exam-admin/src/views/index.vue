@@ -42,7 +42,7 @@
 					<el-breadcrumb-item>{{this.$route.name}}</el-breadcrumb-item>
 				</el-breadcrumb>
 				<div class="welcome" v-if="this.$route.name == 'index'" >
-					欢迎使用V-shop
+					欢迎使用考务信管系统
 				</div>
 				<router-view style="margin-top: 10px;"/>
 			</el-main>

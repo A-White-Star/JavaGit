@@ -7,7 +7,7 @@
 			<el-button plain type="primary" size="mini" style="margin-left: 10px;" icon="fa fa-search" @click="search">
 			</el-button>
 			<el-button plain type="success" size="mini" style="margin-left: 10px;" icon="fa fa-user-plus"
-				@click="showAdd">添加新员工</el-button>
+				@click="showAdd">添加新用户</el-button>
 		</div>
 		<div style="margin-top: 15px;">
 			<el-table :data="tableData" size="mini" border stripe style="width: 90%"
@@ -23,21 +23,23 @@
 							@click="handlePassword(scope.$index, scope.row)">初始化密码</el-button>
 						<el-button plain size="mini" icon="fa fa-pencil" @click="handleEdit(scope.$index, scope.row)">
 						</el-button>
-						<el-button plain size="mini" type="danger" icon="fa fa-trash"
+						<!-- <el-button plain size="mini" type="danger" icon="fa fa-trash"
 							@click="handleDelete(scope.$index, scope.row)">
-						</el-button>
+						</el-button> -->
+						<el-switch v-model="panding[scope.row.id-1]" active-color="#d6d4d5" inactive-color="#aeb9d2"
+							@click="handle(scope.$index, scope.row)"></el-switch>
 					</template>
 				</el-table-column>
 			</el-table>
 			<el-button type="danger" size="mini" style="margin-top: 10px;"
 				:disabled="this.multipleSelection.length == 0" @click="deleteDatas()">批量删除</el-button>
 		</div>
-		
+
 		<div>
 			<el-dialog v-model="dialogShow" width="30%" :title="title">
 				<div style="margin-bottom: 10px;">
 					<el-tag type="success">编号</el-tag>
-					<el-input v-model="item.userName" size="mini" style="width: 100%;margin-top: 10px;"
+					<el-input v-model="item.username" size="mini" style="width: 100%;margin-top: 10px;"
 						prefix-icon="el-icon-edit">
 					</el-input>
 				</div>
@@ -49,8 +51,8 @@
 				</div>
 				<div style="margin-bottom: 10px;">
 					<el-tag type="success">性别</el-tag>
-					<el-select v-model="item.sex" placeholder="请选择性别" size="mini"
-						style="width: 100%; margin-top: 10px;" prefix-icon="el-icon-edit">
+					<el-select v-model="item.sex" placeholder="请选择性别" size="mini" style="width: 100%; margin-top: 10px;"
+						prefix-icon="el-icon-edit">
 						<el-option key="1" label="男" value="true"></el-option>
 						<el-option key="0" label="女" value="false"></el-option>
 					</el-select>
@@ -80,6 +82,7 @@
 				multipleSelection: [],
 				key: '',
 				title: '',
+				panding: [],
 				dialogShow: false,
 				item: {
 					"id": null,
@@ -178,6 +181,19 @@
 					}
 				)
 			},
+			handle(index, data) {
+							if (data.shiFouJinYong == '已禁用') {
+								this.$api.postRequest("/api/houtai/yonghu/qiyong/" + data.id)
+								data.shiFouJinYong = '启用中'
+								this.panding[data.id - 1] = false
+							} else {
+								this.$api.postRequest("/api/houtai/yonghu/tingyong/" + data.id)
+								data.shiFouJinYong = '已禁用'
+								this.panding[data.id - 1] = true
+							}
+			},
+					
+			
 			submitDialog() {
 				if (this.item.id == null) {
 					this.add()

@@ -14,9 +14,7 @@
     <resultMap id="WithScore" type="com.white.examsystem.model.Test" extends="BaseResultMap">
         <association property="scoreByUserId" javaType="Integer">
             <id property="score" column="score" jdbcType="INTEGER"/>
-<!--            <result property="score" column="score" jdbcType="INTEGER"/>-->
         </association>
-
     </resultMap>
 
     <insert id="add" useGeneratedKeys="true" keyProperty="id">
@@ -83,7 +81,7 @@
 
     <select id="getScoreListByUserId"  resultMap="WithScore" >
         SELECT
-            t.*, 
+            t.*,
             me.score
         FROM
             test t

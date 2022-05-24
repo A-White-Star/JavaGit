@@ -10,11 +10,8 @@ public class MyExamService {
     @Autowired
     MyExamDao myExamDao;
 
-    public RespBean getAllScoreByUserId(Integer userId){
-        return RespBean.success(myExamDao.getAllScoreByUserId(userId));
+    public RespBean getStudentByTestId(Integer testId){
+        return RespBean.success(myExamDao.getStudentByTestId(testId));
     }
 
-    public RespBean getTestListByUserId(Integer userId){
-        return RespBean.success(myExamDao.getTestListByUserId(userId));
-    }
 }

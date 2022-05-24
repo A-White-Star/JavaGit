@@ -241,7 +241,6 @@
 						   "date":null,
 					       "place": '',
 					       "isDelete": false,
-						// this.initCaiDanList()
 						}
 						that.dialogShow = false
 					}
@@ -266,4 +265,3 @@
 		display: flex;
 	}
 </style>
-

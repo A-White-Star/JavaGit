@@ -15,6 +15,6 @@ public class MyExam {
     Integer testId;
     Integer score;
 
-//    private List<User> userList; //所有报名该考试的名单
-    private List<Test> testList; //个人报名的所有考试名单
+    private String student; //所有报名该考试的名单
+//    private List<Test> testList; //个人报名的所有考试名单
 }

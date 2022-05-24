@@ -20,6 +20,6 @@ public interface TestDao {
     int deleteByIds(Long[] ids);
     int existsTest(Date date, String place);//判断同一时间同一地点是否已经有考试同一时间同一地点是否已经有考试
     int existsTeacher(Date date, String teacherName);//判断同一时间同一个老师是否已经有监考任务
-
-    List<Test> getShowList();
+//
+//    List<Test> getShowList();
 }

@@ -45,7 +45,7 @@ public class TestController {
     public RespBean getAll(){
         return testService.getAll();
     }
-    @GetMapping("scorlistbyuserid/{userId}")
+    @GetMapping("scorelistbyuserid/{userId}")
     public RespBean getScoreListByUserId(@PathVariable("userId") Integer userId){
         return testService.getScoreListByUserId(userId);
     }

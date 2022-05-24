@@ -34,16 +34,11 @@
 		},
 		methods: {
 			initList() {
-				this.$api.getRequest("/api/houtai/scorlistbyuserid/" + this.user.id).then(
+				this.$api.getRequest("/api/houtai/scorelistbyuserid/" + this.user.id).then(
 					resp => {
 						this.tableData = resp.responseData
 					}
 				)
-				// this.$api.getRequest("/api/houtai/scorebyuserid/" + this.user.id).then(
-				// 	resp => {
-				// 		this.tableData2 = resp.responseData
-				// 	}
-				// )
 			}
 		}
 	}

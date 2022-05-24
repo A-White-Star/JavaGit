@@ -5,24 +5,26 @@
         <id property="id" column="id" jdbcType="INTEGER"/>
         <result property="testId" column="testId" jdbcType="INTEGER"/>
         <result property="scoreId" column="scoreId" jdbcType="INTEGER"/>
+        <result property="score" column="score" jdbcType="INTEGER"/>
     </resultMap>
-    <select id="getAllScoreByUserId" resultType="com.white.examsystem.model.MyExam">
-        SELECT
-            score
-        FROM
-            myexam
-        WHERE
-            userid = #{userId}
-    </select>
 
-    <select id="getTestListByUserId" resultType="com.white.examsystem.model.Test">
-    SELECT
-    t.*
-    FROM
-    myexam me
-    LEFT JOIN test t ON me.testid = t.id
-    WHERE
-    t.isDelete = 0
-    AND me.userid = #{userId}
+    <resultMap id="WithStudentScore" type="com.white.examsystem.model.MyExam" extends="BaseResultMap">
+<!--        <collection property="studentList" ofType="String">-->
+<!--            <id property="name" column="name" jdbcType="VARCHAR"/>-->
+<!--       </collection>-->
+        <association property="student" javaType="String" >
+            <id property="name" column="name" jdbcType="VARCHAR"/>
+        </association>
+    </resultMap>
+    
+    <select id="getStudentByTestId" resultMap="WithStudentScore">
+        SELECT
+            student.*, me.score
+        FROM
+            `user` student
+                LEFT JOIN myexam me ON me.userid = student.id
+        WHERE
+            student.isDelete = 0
+          AND me.testid = #{testId}
     </select>
 </mapper>
